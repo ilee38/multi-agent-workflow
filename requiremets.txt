@@ -1,0 +1,10 @@
+autogen-core
+autogen-ext
+beautifulsoup4
+azure-identity
+openai
+pandas
+requests
+sec-api
+streamlit
+tiktoken
