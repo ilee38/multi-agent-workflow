@@ -3,7 +3,6 @@ autogen-ext
 beautifulsoup4
 azure-identity
 openai
-pandas
 requests
 sec-api
 tiktoken
