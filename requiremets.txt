@@ -6,5 +6,4 @@ openai
 pandas
 requests
 sec-api
-streamlit
 tiktoken

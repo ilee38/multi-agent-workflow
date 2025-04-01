@@ -4,8 +4,8 @@ import json
 from bs4 import BeautifulSoup
 from sec_api import XbrlApi
 
-HTTP_USER_AGENT_NAME = "IramLee"
-HTTP_USER_AGENT_EMAIL = "iram.lee@gmail.com"
+HTTP_USER_AGENT_NAME = "[YOUR NAME]"
+HTTP_USER_AGENT_EMAIL = "[YOUR EMAIL]"
 
 
 def get_cik_from_ticker(ticker : str) -> str:
