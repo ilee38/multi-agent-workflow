@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from typing import List
 from autogen_core.tools import FunctionTool, Tool
 from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
-from azure.identity import AzureCliCredential, get_bearer_token_provider
-from agents_tools import get_most_recent_10k_balance_sheet
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+from agents_tools import get_most_recent_10k_cash_flow_statement
 from autogen_core import (
     MessageContext,
     RoutedAgent,
@@ -28,8 +28,6 @@ from autogen_core.models import (
     FunctionExecutionResultMessage
 )
 
-
-MY_AZURE_OPENAI_API_KEY = os.environ.get("MY_AZURE_OPENAI_API_KEY")
 MY_AZURE_OPENAI_ENDPOINT = os.environ.get("MY_AZURE_OPENAI_ENDPOINT")
 
 
@@ -45,7 +43,7 @@ recommender_topic_type = "RecommenderAgent"
 
 # Agent Tools
 most_recent_10k_balance_sheet_tool = FunctionTool(
-    get_most_recent_10k_balance_sheet,
+    get_most_recent_10k_cash_flow_statement,
     description="Obtains the most recent cash flow statement in the 10-K report filing to the SEC for the given ticker symbol."
 )
 
@@ -59,6 +57,7 @@ class DataExtractorAgent(RoutedAgent):
             content=(
                 "You are a corporate financial data analyst.\n"
                 "You will be given the ticker symbol of a company, and you are to obtain the most recent cash flow statement in its 10-K filing from the SEC for that company.\n"
+                "Use any tool available to you to obtain the data.\n"
                 "The data you obtain might be in JSON format, you are to identify and extract the most important financial metrics from the filing.\n"
                 "Once you have extracted this information, provide a detailed report including the name of the company, the ticker symbol, and the extracted financial metrics."
             )
@@ -67,7 +66,7 @@ class DataExtractorAgent(RoutedAgent):
         self._tools: List[Tool] = [most_recent_10k_balance_sheet_tool]
 
     @message_handler
-    async def handle_outie_message(self, message: Message, context: MessageContext) -> None:
+    async def handle_outside_message(self, message: Message, context: MessageContext) -> None:
         # Create session of messages
         session: List[LLMMessage] = self._system_messages + [UserMessage(content=message.content, source="user")]
 
@@ -75,7 +74,7 @@ class DataExtractorAgent(RoutedAgent):
         llm_result = await self._model_client.create(
             messages=session,
             tools=self._tools,
-            cancellation_token=context.cancellation_token,
+            cancellation_token=context.cancellation_token
         )
 
         # Add the result to the session
@@ -184,18 +183,17 @@ class RecommenderAgent(RoutedAgent):
 
 
 def get_azure_openai_chat_completion_client() -> AzureOpenAIChatCompletionClient:
-    # token_provider = get_bearer_token_provider(
-    #     AzureCliCredential(tenant_id="6457b4da-84ce-4712-b20c-0a0dbf25829f"),
-    #     "https://cognitiveservices.azure.com/.default"
-    # )
+    token_provider = get_bearer_token_provider(
+        DefaultAzureCredential(),
+        "https://cognitiveservices.azure.com/.default"
+    )
 
     return AzureOpenAIChatCompletionClient(
         azure_deployment="gpt-4o",
         model="gpt-4o-2024-11-20",
         api_version="2024-10-21",
         azure_endpoint=MY_AZURE_OPENAI_ENDPOINT,
-        #azure_ad_token_provider=token_provider
-        api_key=MY_AZURE_OPENAI_API_KEY
+        azure_ad_token_provider=token_provider
     )
     
 
@@ -234,5 +232,9 @@ async def start_workflow(message : str) -> None:
 
 
 if __name__ == "__main__":
-    message = input("What stock are you interested to buy (Enter the ticker symbol): ")
+    message = input(
+        f"{'='*80}\n"
+        "Hello! I can help you with your stock analysis and provide an investment recommendation.\n"
+        "What stock are you interested to buy? (please include the ticker symbol): \n"
+    )
     asyncio.run(start_workflow(message))

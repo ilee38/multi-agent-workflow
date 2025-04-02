@@ -25,7 +25,7 @@ def get_cik_from_ticker(ticker : str) -> str:
         return cik
 
 
-def get_most_recent_10k_balance_sheet(ticker : str) -> dict:
+def get_most_recent_10k_cash_flow_statement(ticker : str) -> dict:
     """ Obtains the most recent cash flow statement in a 10-K report filing to the SEC for the given ticker symbol.
         The returned python dict contains the financial data and follows the US GAAP taxonomy.
     Args:
