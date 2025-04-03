@@ -42,7 +42,7 @@ financial_analyst_topic_type = "FinancialAnalystAgent"
 recommender_topic_type = "RecommenderAgent"
 
 # Agent Tools
-most_recent_10k_balance_sheet_tool = FunctionTool(
+get_financial_data_tool = FunctionTool(
     get_most_recent_10k_cash_flow_statement,
     description="Obtains the most recent cash flow statement in the 10-K report filing to the SEC for the given ticker symbol."
 )
@@ -63,7 +63,7 @@ class DataExtractorAgent(RoutedAgent):
             )
         )]
         self._model_client = model_client
-        self._tools: List[Tool] = [most_recent_10k_balance_sheet_tool]
+        self._tools: List[Tool] = [get_financial_data_tool]
 
     @message_handler
     async def handle_outside_message(self, message: Message, context: MessageContext) -> None:
