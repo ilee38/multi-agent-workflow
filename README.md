@@ -22,7 +22,7 @@ MY_AZURE_OPENAI_ENDPOINT="[YOUR_AZURE_OPENAI_SERVICE_ENDPOINT]"
 Replacing the `"[YOUR_AZURE_OPENAI_SERVICE_ENDPOINT]"` placeholder with your own Azure OpenAI Service endpoint (you can find this information on your Azure AI Foundry dashboard).
 
 #### Azure Auth
-Additionally, our model client uses Azure Active Directory (AAD) authentication. You need to assign the *Cognitive Services OpenAI User* role to your Azure user's identity (Microsoft Entra ID).
+Additionally, our model client uses Azure Active Directory (AAD) authentication. You need to assign the *Cognitive Services OpenAI User* role to your Azure user.
 
 Once all of the above is configured, make sure you're signed in to your Azure account from your local environment. To sign-in, use the Azure cli on your terminal. Sign-in with the same user that you assigned the above RBAC role to.
 
