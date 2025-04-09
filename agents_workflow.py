@@ -235,6 +235,7 @@ if __name__ == "__main__":
     message = input(
         f"{'='*80}\n"
         "Hello! I can help you with your stock analysis and provide an investment recommendation.\n"
-        "What stock are you interested to buy? (please include the ticker symbol): \n"
+        "What stock are you interested to buy? (please include the ticker symbol) \n\n"
+        "[User]: "
     )
     asyncio.run(start_workflow(message))
