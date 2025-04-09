@@ -24,7 +24,13 @@ Replacing the `"[YOUR_AZURE_OPENAI_SERVICE_ENDPOINT]"` placeholder with your own
 #### Azure Auth
 Additionally, our model client uses Azure Active Directory (AAD) authentication. You need to assign the *Cognitive Services OpenAI User* role to your Azure user.
 
-Once all of the above is configured, make sure you're signed in to your Azure account from your local environment. To sign-in, use the Azure cli on your terminal. Sign-in with the same user that you assigned the above RBAC role to.
+Once all of the above is configured, make sure you're signed in to your Azure account from your local environment. To sign-in, use the Azure cli on your terminal. Sign-in using the *tenant ID* for your user's Microsoft Entra ID as follows (search for "Microsoft Entra ID" in the Azure portal and copy the tenant ID).
+
+```bash
+az login --tenant [YOUR_TENANT_ID]
+```
+
+Replace the `[YOUR_TENANT_ID]` placeholder with your own tenant ID.
 
 ### If Not Using Azure OpenAI
 However, if you prefer to use other AI model clients—e.g. Gemini, OpenAI, a model hosted on Anthropic, or from Ollama—you'll need to modify the client creation method in the source code.
